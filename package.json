@@ -1,5 +1,6 @@
 {
-  "name": "fh-proxy",
+  "name": "fareharbor-proxy",
+  "version": "1.0.0",
   "private": true,
   "type": "module"
 }
