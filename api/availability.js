@@ -10,41 +10,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { item, date } = req.query;
-    if (!item || !date) {
-      return res.status(400).json({ error: "Missing required query params: item, date" });
-    }
-
     const shortname = process.env.FH_SHORTNAME;
     const apiKey    = process.env.FH_API_KEY;
+
     if (!shortname || !apiKey) {
       return res.status(500).json({ error: "Server misconfigured: missing FH_SHORTNAME or FH_API_KEY" });
     }
 
-    const url = `https://fareharbor.com/api/v1/companies/${shortname}/items/${item}/availability/?date=${date}`;
+    // 🔽 TEMP TEST — just hit the company endpoint
+    const url = `https://fareharbor.com/api/v1/companies/${shortname}/`;
     const r = await fetch(url, {
-      headers: {
+      headers: { 
         "X-FareHarbor-API-Key": apiKey,
-        Accept: "application/json",
-      },
+        Accept: "application/json"
+      }
     });
 
-    // CORS headers on every response
+    // Always include CORS headers
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    if (!r.ok) {
-      const text = await r.text();
-      return res.status(r.status).json({
-        error: "FareHarbor error",
-        status: r.status,
-        detail: text,
-      });
-    }
+    const text = await r.text();
+    return res.status(r.status).send(text);
+    // 🔼 END TEMP TEST
 
-    const data = await r.json();
-    return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json({ error: String(err) });
   }
