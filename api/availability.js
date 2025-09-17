@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Server misconfigured: missing FH_SHORTNAME or FH_API_KEY" });
     }
 
-    const url = `https://fareharbor.com/api/v1/companies/${shortname}/calendar/availability/?item=${item}&start_date=${date}&end_date=${date}`;
+    const url = `https://fareharbor.com/api/v1/companies/${shortname}/items/${item}/availability/?date=${date}`;
     const r = await fetch(url, {
       headers: {
         "X-FareHarbor-API-Key": apiKey,
